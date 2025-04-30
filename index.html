@@ -47,11 +47,40 @@
 
   <h3>Email's Separados Por Vírgula:</h3>
   <div id="resultado"></div>
-
+  <button onclick="copiarResultado()">Copiar Resultado</button>
   <script>
-    function extrairEmails() {
-      const texto = document.getElementById("texto").value;
+      function extrairEmails() {
+        let texto = document.getElementById("texto").value;
+        
+        // Tenta inserir espaços antes de e-mails embutidos em palavras
+        texto = texto.replace(/([a-zA-Z0-9])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $2');
+      
+        const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      
+        const emails = texto.match(regexEmail);
+      
+        const resultado = emails ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
+      
+        document.getElementById("resultado").textContent = resultado;
+      };
 
+      function copiarResultado() {
+        const resultado = document.getElementById("resultado").textContent;
+
+        // Cria um elemento temporário para seleção do texto
+        consta tempInput = document.createElement("textarea");
+        tempinput.value = resultado;
+        document.body.appendChild(tempInput);
+
+        tempInput.select();
+        tempoInput.setSelectionRange(0,99999);// Para dispositivos móveis
+
+        document.execComando("Copy");
+        document.body.removeChild(tempInput);
+
+        alert("Resultado copiado para a área de transfêrencia!");
+      }
+        
       // Expressão regular para encontrar e-mails
       const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 
