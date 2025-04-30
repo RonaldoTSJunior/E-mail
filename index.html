@@ -53,14 +53,16 @@
     function extrairEmails() {
       let texto = document.getElementById("texto").value;
 
-      // Adiciona espaço antes de e-mails colados em palavras
-      texto = texto.replace(/([a-zA-Z0-9])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $2');
+      // Expressão regular com lookbehind e lookahead para evitar capturar e-mails colados
+      const regexEmail = /(?<![a-zA-Z0-9._%+-])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(?![a-zA-Z0-9._%+-])/g;
 
-      const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      const emails = [];
+      let match;
+      while ((match = regexEmail.exec(texto)) !== null) {
+        emails.push(match[1]); // captura apenas o grupo com o e-mail limpo
+      }
 
-      const emails = texto.match(regexEmail);
-
-      const resultado = emails ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
+      const resultado = emails.length > 0 ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
 
       document.getElementById("resultado").textContent = resultado;
     }
