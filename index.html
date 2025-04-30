@@ -53,11 +53,17 @@
     function extrairEmails() {
       const texto = document.getElementById("texto").value;
 
-      // Regex procura todos os padrões que pareçam e-mails dentro do texto
-      const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-      const emails = texto.match(regexEmail) || [];
+      // Pega todas as possíveis palavras que contenham "@" e "."
+      const possiveis = texto.match(/\S+@\S+\.\S+/g) || [];
 
-      // Remove duplicatas
+      const emailValidoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      // Agora extrai apenas o que é um e-mail puro, sem letras antes ou depois
+      const emails = possiveis.map(palavra => {
+        const match = palavra.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        return match ? match[0] : null;
+      }).filter(email => email && emailValidoRegex.test(email));
+
       const unicos = [...new Set(emails)];
 
       const resultado = unicos.length > 0 ? unicos.join(", ") : "Nenhum e-mail encontrado.";
