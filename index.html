@@ -53,18 +53,16 @@
     function extrairEmails() {
       const texto = document.getElementById("texto").value;
 
-      // Pega todas as possíveis palavras que contenham "@" e "."
-      const possiveis = texto.match(/\S+@\S+\.\S+/g) || [];
+      // Regex que extrai somente e-mails, ignorando letras coladas
+      const regex = /(?<!\w)([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(?!\w)/g;
 
-      const emailValidoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const matches = [];
+      let match;
+      while ((match = regex.exec(texto)) !== null) {
+        matches.push(match[1]); // pega apenas o e-mail capturado no grupo
+      }
 
-      // Agora extrai apenas o que é um e-mail puro, sem letras antes ou depois
-      const emails = possiveis.map(palavra => {
-        const match = palavra.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-        return match ? match[0] : null;
-      }).filter(email => email && emailValidoRegex.test(email));
-
-      const unicos = [...new Set(emails)];
+      const unicos = [...new Set(matches)];
 
       const resultado = unicos.length > 0 ? unicos.join(", ") : "Nenhum e-mail encontrado.";
       document.getElementById("resultado").textContent = resultado;
