@@ -12,9 +12,7 @@
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      min-height: 100vh
+      min-height: 100vh;
     }
     textarea {
       width: 100%;
@@ -26,6 +24,8 @@
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 10px;
+      margin-right: 10px;
+      margin-top: 10px;
     }
     #resultado {
       background: #f2f2f2;
@@ -34,7 +34,7 @@
       border: 1px solid #ccc;
       margin-top: 10px;
       white-space: pre-wrap;
-      border-radius: 10px
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -44,53 +44,41 @@
   <textarea id="texto" placeholder="Cole aqui o texto que contém os e-mails..."></textarea>
 
   <button onclick="extrairEmails()">Extrair</button>
+  <button onclick="copiarResultado()">Copiar Resultado</button>
 
   <h3>Email's Separados Por Vírgula:</h3>
   <div id="resultado"></div>
-  <button onclick="copiarResultado()">Copiar Resultado</button>
+
   <script>
-      function extrairEmails() {
-        let texto = document.getElementById("texto").value;
-        
-        // Tenta inserir espaços antes de e-mails embutidos em palavras
-        texto = texto.replace(/([a-zA-Z0-9])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $2');
-      
-        const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-      
-        const emails = texto.match(regexEmail);
-      
-        const resultado = emails ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
-      
-        document.getElementById("resultado").textContent = resultado;
-      };
+    function extrairEmails() {
+      let texto = document.getElementById("texto").value;
 
-      function copiarResultado() {
-        const resultado = document.getElementById("resultado").textContent;
+      // Adiciona espaço antes de e-mails colados em palavras
+      texto = texto.replace(/([a-zA-Z0-9])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $2');
 
-        // Cria um elemento temporário para seleção do texto
-        consta tempInput = document.createElement("textarea");
-        tempinput.value = resultado;
-        document.body.appendChild(tempInput);
-
-        tempInput.select();
-        tempoInput.setSelectionRange(0,99999);// Para dispositivos móveis
-
-        document.execComando("Copy");
-        document.body.removeChild(tempInput);
-
-        alert("Resultado copiado para a área de transfêrencia!");
-      }
-        
-      // Expressão regular para encontrar e-mails
       const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 
-      // Match dos e-mails no texto
       const emails = texto.match(regexEmail);
 
-      // Remove duplicatas, se houver, e junta por vírgula
       const resultado = emails ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
 
       document.getElementById("resultado").textContent = resultado;
+    }
+
+    function copiarResultado() {
+      const resultado = document.getElementById("resultado").textContent;
+
+      const tempInput = document.createElement("textarea");
+      tempInput.value = resultado;
+      document.body.appendChild(tempInput);
+
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999); // Para dispositivos móveis
+
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      alert("Resultado copiado para a área de transferência!");
     }
   </script>
 
