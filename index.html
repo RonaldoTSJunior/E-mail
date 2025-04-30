@@ -53,21 +53,14 @@
     function extrairEmails() {
       const texto = document.getElementById("texto").value;
 
-      // Pega qualquer coisa que pareça um e-mail
+      // Regex procura todos os padrões que pareçam e-mails dentro do texto
       const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-      const matches = texto.match(regexEmail) || [];
+      const emails = texto.match(regexEmail) || [];
 
-      const emails = matches.filter(email => {
-        // Verifica se o e-mail está "dentro" de uma palavra maior
-        const index = texto.indexOf(email);
-        const charBefore = texto[index - 1];
-        const charAfter = texto[index + email.length];
-        const isBeforeValid = !charBefore || !/[a-zA-Z0-9._%+-]/.test(charBefore);
-        const isAfterValid = !charAfter || !/[a-zA-Z0-9._%+-]/.test(charAfter);
-        return isBeforeValid && isAfterValid;
-      });
+      // Remove duplicatas
+      const unicos = [...new Set(emails)];
 
-      const resultado = emails.length > 0 ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
+      const resultado = unicos.length > 0 ? unicos.join(", ") : "Nenhum e-mail encontrado.";
       document.getElementById("resultado").textContent = resultado;
     }
 
