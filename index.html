@@ -51,19 +51,23 @@
 
   <script>
     function extrairEmails() {
-      let texto = document.getElementById("texto").value;
+      const texto = document.getElementById("texto").value;
 
-      // Expressão regular com lookbehind e lookahead para evitar capturar e-mails colados
-      const regexEmail = /(?<![a-zA-Z0-9._%+-])([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(?![a-zA-Z0-9._%+-])/g;
+      // Pega qualquer coisa que pareça um e-mail
+      const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      const matches = texto.match(regexEmail) || [];
 
-      const emails = [];
-      let match;
-      while ((match = regexEmail.exec(texto)) !== null) {
-        emails.push(match[1]); // captura apenas o grupo com o e-mail limpo
-      }
+      const emails = matches.filter(email => {
+        // Verifica se o e-mail está "dentro" de uma palavra maior
+        const index = texto.indexOf(email);
+        const charBefore = texto[index - 1];
+        const charAfter = texto[index + email.length];
+        const isBeforeValid = !charBefore || !/[a-zA-Z0-9._%+-]/.test(charBefore);
+        const isAfterValid = !charAfter || !/[a-zA-Z0-9._%+-]/.test(charAfter);
+        return isBeforeValid && isAfterValid;
+      });
 
       const resultado = emails.length > 0 ? [...new Set(emails)].join(", ") : "Nenhum e-mail encontrado.";
-
       document.getElementById("resultado").textContent = resultado;
     }
 
@@ -75,7 +79,7 @@
       document.body.appendChild(tempInput);
 
       tempInput.select();
-      tempInput.setSelectionRange(0, 99999); // Para dispositivos móveis
+      tempInput.setSelectionRange(0, 99999);
 
       document.execCommand("copy");
       document.body.removeChild(tempInput);
